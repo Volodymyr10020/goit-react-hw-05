@@ -1,51 +1,48 @@
-import { useState } from "react";
-import { searchMovies } from "../../api";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { fetchMoviesByQuery } from "../../api";
 import MovieList from "../../components/MovieList/MovieList";
-import styles from "./MoviesPage.module.css";
 
 const MoviesPage = () => {
-  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
 
-  const handleInputChange = (e) => {
-    setQuery(e.target.value);
-  };
+  useEffect(() => {
+    if (!query) return;
 
-  const handleSubmit = async (e) => {
+    const fetchMovies = async () => {
+      try {
+        const response = await fetchMoviesByQuery(query);
+        setMovies(response.results);
+      } catch (error) {
+        console.error("Failed to fetch movies:", error);
+      }
+    };
+
+    fetchMovies();
+  }, [query]);
+
+  const handleSearch = (e) => {
     e.preventDefault();
+    const form = e.target;
+    const queryInput = form.elements.query.value.trim();
 
-    if (query.trim() === "") {
-      setError("Please enter a search query");
+    if (!queryInput) {
+      alert("Please enter a search term.");
       return;
     }
 
-    setError(null);
-
-    try {
-      const results = await searchMovies(query);
-      setMovies(results);
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
-    }
+    setSearchParams({ query: queryInput });
+    form.reset();
   };
 
   return (
     <div>
-      <h1>Search Movies</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <input
-          type="text"
-          value={query}
-          onChange={handleInputChange}
-          placeholder="Search movies..."
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button}>
-          Search
-        </button>
+      <form onSubmit={handleSearch}>
+        <input type="text" name="query" placeholder="Search movies..." />
+        <button type="submit">Search</button>
       </form>
-      {error && <p className={styles.error}>{error}</p>}
       <MovieList movies={movies} />
     </div>
   );
