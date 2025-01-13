@@ -1,0 +1,12 @@
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  margin-bottom: 20px;
+}
+
+.error {
+  color: red;
+}

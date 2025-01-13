@@ -1,0 +1,26 @@
+.button {
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.details {
+  display: flex;
+  gap: 20px;
+}
+
+.poster {
+  width: 300px;
+  height: auto;
+}
+
+.links {
+  margin-top: 20px;
+}
+
+.link {
+  margin-right: 10px;
+  text-decoration: none;
+  color: blue;
+}
