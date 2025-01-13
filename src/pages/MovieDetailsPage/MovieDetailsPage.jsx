@@ -1,66 +1,56 @@
-import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, Link, Outlet, useLocation } from "react-router-dom";
 import { fetchMovieDetails } from "../../api";
-import styles from "./MovieDetailsPage.module.css";
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
-  const [movie, setMovie] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate();
-  const backLocationRef = useRef(location.state?.from || "/movies");
+  const backLinkRef = useRef(location.state || "/movies");
+  const [movie, setMovie] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const getMovieDetails = async () => {
+    const fetchDetails = async () => {
       try {
-        const data = await fetchMovieDetails(movieId);
-        setMovie(data);
-      } catch (error) {
-        console.error("Failed to fetch movie details:", error);
+        const movieData = await fetchMovieDetails(movieId);
+        setMovie(movieData);
+      } catch (err) {
+        setError(err.message);
       }
     };
 
-    getMovieDetails();
+    fetchDetails();
   }, [movieId]);
 
-  const handleGoBack = () => {
-    navigate(backLocationRef.current);
-  };
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   if (!movie) {
     return <p>Loading...</p>;
   }
 
-  const { title, overview, genres, poster_path } = movie;
+  const { title, overview, genres } = movie;
 
   return (
-    <div className={styles.movieDetails}>
-      <button onClick={handleGoBack}>Go back</button>
-      <div className={styles.movieInfo}>
-        <img
-          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-          alt={title}
-        />
-        <div>
-          <h1>{title}</h1>
-          <p>{overview}</p>
-          <p>Genres: {genres.map((genre) => genre.name).join(", ")}</p>
-        </div>
-      </div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="cast" state={{ from: backLocationRef.current }}>
-              Cast
-            </Link>
-          </li>
-          <li>
-            <Link to="reviews" state={{ from: backLocationRef.current }}>
-              Reviews
-            </Link>
-          </li>
-        </ul>
-      </nav>
+    <div>
+      <Link to={backLinkRef.current}>Go back</Link>
+      <h1>{title}</h1>
+      <p>{overview}</p>
+      <h3>Genres:</h3>
+      <ul>
+        {genres && genres.map((genre) => <li key={genre.id}>{genre.name}</li>)}
+      </ul>
+      <hr />
+      <ul>
+        <li>
+          <Link to="cast">Cast</Link>
+        </li>
+        <li>
+          <Link to="reviews">Reviews</Link>
+        </li>
+      </ul>
+      <Outlet />
     </div>
   );
 };

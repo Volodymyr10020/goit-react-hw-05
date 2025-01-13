@@ -19,6 +19,20 @@ const searchMovies = async (query) => {
   });
   return data.results;
 };
+export const fetchMoviesByQuery = async (query) => {
+  const response = await axios.get(`${API_URL}/search/movie`, {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+    },
+    params: {
+      query,
+      include_adult: false,
+      language: "en-US",
+      page: 1,
+    },
+  });
+  return response.data;
+};
 
 const fetchMovieDetails = async (movieId) => {
   const { data } = await axios.get(`${API_URL}/movie/${movieId}`, {
