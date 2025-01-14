@@ -41,9 +41,7 @@ const MovieReviews = () => {
       {error && <p className={styles.error}>{error}</p>}
 
       {!isLoading && !error && reviews.length === 0 && (
-        <p className={styles.message}>
-          We do not have any reviews for this movie.
-        </p>
+        <p className={styles.message}>No reviews available.</p>
       )}
 
       {!isLoading && !error && reviews.length > 0 && (
