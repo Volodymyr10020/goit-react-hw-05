@@ -41,22 +41,12 @@ export const fetchMovieDetails = async (movieId) => {
 };
 
 export const fetchMovieCast = async (movieId) => {
-  try {
-    const response = await fetch(
-      `${API_URL}/movie/${movieId}/credits?api_key=${API_KEY}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch movie cast.");
-    }
-
-    const data = await response.json();
-    console.log("Cast Data Response:", data);
-    return data;
-  } catch (error) {
-    console.error("Error fetching movie cast:", error);
-    throw error;
-  }
+  const response = await axios.get(`${API_URL}/movie/${movieId}/credits`, {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+    },
+  });
+  return response.data.cast;
 };
 
 export const fetchMovieReviews = async (movieId) => {
