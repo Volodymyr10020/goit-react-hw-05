@@ -5,14 +5,14 @@ const API_URL =
 const API_KEY =
   "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZmM0YWQ4MGNiOTE2ZTNhYTYxM2U0ZmEyYmYzN2I2MyIsIm5iZiI6MTczNjc3MzQwMS43MjgsInN1YiI6IjY3ODUwZjE5ZWU4NGZhNGRlZjdiOThiNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.xcEvnXd4B6rzd0GXLF3fgcIuFEQDgPF-Mqhus4_FIpQ";
 
-const fetchTrendingMovies = async () => {
+export const fetchTrendingMovies = async () => {
   const { data } = await axios.get(`${API_URL}/trending/movie/day`, {
     headers: { Authorization: `Bearer ${API_KEY}` },
   });
   return data.results;
 };
 
-const searchMovies = async (query) => {
+export const searchMovies = async (query) => {
   const { data } = await axios.get(`${API_URL}/search/movie`, {
     params: { query, include_adult: false },
     headers: { Authorization: `Bearer ${API_KEY}` },
@@ -34,31 +34,23 @@ export const fetchMoviesByQuery = async (query) => {
   return response.data;
 };
 
-const fetchMovieDetails = async (movieId) => {
+export const fetchMovieDetails = async (movieId) => {
   const { data } = await axios.get(`${API_URL}/movie/${movieId}`, {
     headers: { Authorization: `Bearer ${API_KEY}` },
   });
   return data;
 };
 
-const fetchMovieCast = async (movieId) => {
+export const fetchMovieCast = async (movieId) => {
   const { data } = await axios.get(`${API_URL}/movie/${movieId}/credits`, {
     headers: { Authorization: `Bearer ${API_KEY}` },
   });
   return data.cast;
 };
 
-const fetchMovieReviews = async (movieId) => {
+export const fetchMovieReviews = async (movieId) => {
   const { data } = await axios.get(`${API_URL}/movie/${movieId}/reviews`, {
     headers: { Authorization: `Bearer ${API_KEY}` },
   });
   return data.results;
-};
-
-export {
-  fetchTrendingMovies,
-  searchMovies,
-  fetchMovieDetails,
-  fetchMovieCast,
-  fetchMovieReviews,
 };
