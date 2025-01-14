@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, Link, Outlet, useLocation } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { fetchMovieDetails } from "../../api";
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const location = useLocation();
-  const backLinkRef = useRef(location.state || "/movies");
+  const navigate = useNavigate();
+  const backLinkRef = useRef(location.state?.from || "/movies");
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState(null);
 
@@ -32,9 +39,13 @@ const MovieDetailsPage = () => {
 
   const { title, overview, genres } = movie;
 
+  const handleGoBack = () => {
+    navigate(backLinkRef.current);
+  };
+
   return (
     <div>
-      <Link to={backLinkRef.current}>Go back</Link>
+      <button onClick={handleGoBack}>Go back</button>
       <h1>{title}</h1>
       <p>{overview}</p>
       <h3>Genres:</h3>
