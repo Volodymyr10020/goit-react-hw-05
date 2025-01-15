@@ -18,8 +18,8 @@ const MovieReviews = () => {
       setError(null);
 
       try {
-        const { results } = await fetchMovieReviews(movieId);
-        setReviews(results || []);
+        const reviewsData = await fetchMovieReviews(movieId);
+        setReviews(reviewsData || []);
       } catch (err) {
         setError("Failed to fetch reviews.");
       } finally {
@@ -46,7 +46,7 @@ const MovieReviews = () => {
 
       {!isLoading && !error && reviews.length > 0 && (
         <>
-          <h2 className={styles.subtitle}>Reviews</h2>
+          <h2 className={styles.title}>Reviews</h2>
           <ul className={styles.reviewsList}>
             {reviews.map(({ id, author, content }) => (
               <li key={id} className={styles.reviewsItem}>
