@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../Loader/Loader";
 import { fetchMovieCast } from "../../api";
-import css from "./MovieCast.module.css";
+import styles from "./MovieCast.module.css";
 
 const defaultImg =
   "https://dl-media.viber.com/10/share/2/long/vibes/icon/image/0x0/95e0/5688fdffb84ff8bed4240bcf3ec5ac81ce591d9fa9558a3a968c630eaba195e0.jpg";
@@ -19,7 +19,7 @@ const MovieCast = () => {
     const fetchCastData = async () => {
       setIsLoading(true);
       try {
-        const { cast: castData } = await fetchMovieCast(movieId);
+        const castData = await fetchMovieCast(movieId);
         setCast(castData || []);
       } catch (err) {
         setError(`Error fetching cast: ${err.message}`);
@@ -33,26 +33,26 @@ const MovieCast = () => {
 
   if (isLoading) {
     return (
-      <div className={css.loading}>
+      <div className={styles.loading}>
         <Loader />
       </div>
     );
   }
 
   if (error) {
-    return <p className={css.error}>{error}</p>;
+    return <p className={styles.error}>{error}</p>;
   }
 
   if (!cast.length) {
-    return <p className={css.message}>No cast information available.</p>;
+    return <p className={styles.message}>No cast information available.</p>;
   }
 
   return (
-    <div className={css.container}>
-      <h2 className={css.subtitle}>Movie Cast</h2>
-      <ul className={css.castList}>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Movie Cast</h2>
+      <ul className={styles.castList}>
         {cast.map(({ id, name, profile_path, character }) => (
-          <li key={id} className={css.castItem}>
+          <li key={id} className={styles.castItem}>
             <img
               src={
                 profile_path
@@ -60,10 +60,10 @@ const MovieCast = () => {
                   : defaultImg
               }
               alt={name}
-              className={css.actorImage}
+              className={styles.actorImage}
             />
-            <p className={css.actorName}>{name}</p>
-            <p className={css.characterName}>
+            <p className={styles.actorName}>{name}</p>
+            <p className={styles.characterName}>
               Character: {character || "Unknown"}
             </p>
           </li>
